@@ -27,25 +27,7 @@
     <!-- isi konten -->
     <div class="container">
         <div class="row" id="listKompetisi">
-            <div class="col-sm-3">
-                <a class="kolaps" data-toggle="collapse" href="#daerahCollapse" role="button" aria-expanded="false" aria-controls="collapseExample">
-                <div class="card">
-                    <img src="https://wallpapercave.com/wp/wp8956027.jpg" class="card-img-top img-fluid" alt="..."> <!--gambar cuma contoh-->
-                    <div class="card-body">
-                        <h6 class="card-title">Nama Liga</h6>
-                        <p class="text-center"><small>Negara Diselenggarakan</small></p>
-                    </div>
-                </div>
-                </a>
-                <div class="collapse" id="daerahCollapse">
-                    <div class="card">
-                        <div class="card-body">
-                        <a href="#" class="btn btn-secondary active" role="button" aria-pressed="true">Link</a>
-                        <a href="#" class="btn btn-secondary active" role="button" aria-pressed="true">Link</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
     </div>
     <!-- isi konten -->
@@ -65,11 +47,53 @@
     <!-- js bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
     <!-- js bootstrap -->
+    <!-- axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- axios -->
     <!-- sweetalert 2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- sweetalert 2 -->
     <!-- script personal -->
     <script>
+    const API = `https://api.football-data.org/v2/`
+    const apiKey = "283dd1cf42b1410780fec6aa615a3e67"
+        // call API
+        axios.get(API + "competitions", {headers: {
+            'X-Auth-Token': `${apiKey}`
+        }}).then(response => {
+            const dataList = response.data.competitions
+            console.log(dataList)
+            let innerHtml = ""
+            let kolapId = "";
+            dataList.forEach(list => {
+                if (list.plan === "TIER_FOUR" || list.plan === "TIER_THREE" || list.plan === "TIER_TWO") {
+                    return true;
+                }
+                innerHtml += `<div class="col-sm-3">
+                <a class="kolaps" data-toggle="collapse" href="#exampleCollapse${kolapId}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <div class="card">
+                    <img src="${list.emblemUrl}" class="card-img-top img-fluid" alt="...">
+                    <div class="card-body">
+                        <h6 class="card-title">${list.name}</h6>
+                        <p class="text-center"><small>${list.area.name}</small></p>
+                    </div>
+                </div>
+                </a>
+                <div class="collapse" id="exampleCollapse${kolapId}">
+                    <div class="card">
+                        <div class="card-body">
+                        <a href="#" class="btn btn-secondary active" role="button" aria-pressed="true">Link</a>
+                        <a href="#" class="btn btn-secondary active" role="button" aria-pressed="true">Link</a>
+                        </div>
+                    </div>
+                </div>
+            </div>`
+            kolapId++
+            });
+            $("#listKompetisi").html(innerHtml)
+        })
+        .catch(err => console.log(err.message))
+        // call API
 
     </script>
     <!-- script personal -->
