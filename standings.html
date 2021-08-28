@@ -39,12 +39,8 @@
                    <th scope="col-sm-2">Points</th>
                </tr>
            </thead>
-           <tbody>
-               <tr>
-                   <td scope="row">1</td>
-                   <td>Chealsea FC Argentina</td>
-                   <td>10</td>
-               </tr>
+           <tbody id="listStanding">
+
            </tbody>
        </table>
     </div>
@@ -67,7 +63,29 @@
     <!-- sweetalert 2 -->
     <!-- script personal -->
     <script>
-        
+        const API = `https://api.football-data.org/v2/`
+        const apiKey = "283dd1cf42b1410780fec6aa615a3e67"
+
+        const getStanding = (stand) => {
+            axios.get(API + "competitions/" + stand + "/standings", {headers:{'X-Auth-Token': `${apiKey}`}})
+            .then(response => {
+                const dataStanding = response.data.standings[0].table //data isi standingnya
+                console.log(dataStanding)
+                let toHtml = ""
+                dataStanding.forEach(tim => {
+                    toHtml += `               <tr>
+                   <td scope="row">${tim.position}</td>
+                   <td><img src="${tim.team.crestUrl}" class="img-fluid" style="max-height: 50px;" alt="bender">${tim.team.name}</td>
+                   <td>${tim.won}</td>
+                   <td>${tim.draw}</td>
+                   <td>${tim.lost}</td>
+                   <td>${tim.points}</td>
+               </tr>`
+                });
+                $("#listStanding").html(toHtml)
+            }).catch(err => console.log(err.message))
+        }
+        getStanding(2021)
     </script>
 </body>
 </html>
