@@ -15,8 +15,8 @@
 <body>
     
     <div class="container">
-        <div class="row">
-            <div class="col-sm-4 offset-sm-4"><img src="https://wallpapercave.com/wp/wp8956027.jpg" class="img-fluid" alt="" srcset=""></div>
+        <div id="gambarKompetisi">
+
         </div>
         <div id="dataKompetisi">
        
@@ -60,6 +60,16 @@
         const apiKey = "283dd1cf42b1410780fec6aa615a3e67"
 
         const getStanding = (stand) => {
+            // data Gambar
+            axios.get(API + "competitions/" + stand + "/", {headers:{'X-Auth-Token': `${apiKey}`}})
+            .then(response1 => {
+                const dataGambar = response1.data
+                let toHtmlGambar = `        <div class="row">
+            <div class="col-sm-4 offset-sm-4"><img src="${dataGambar.emblemUrl}" class="img-fluid" alt="" srcset=""></div>
+        </div>`
+            $("#gambarKompetisi").html(toHtmlGambar)
+            }).catch(err => console.log(err.message))
+            // data standing
             axios.get(API + "competitions/" + stand + "/standings", {headers:{'X-Auth-Token': `${apiKey}`}})
             .then(response => {
                 const dataKompetisi = response.data
@@ -80,7 +90,7 @@
                 });
                 $("#listStanding").html(toHtml)
                 toHtmlStanding += `<div class="row">
-           <div class="col-sm-6 offset-sm-3 text-center">${dataKompetisi.competition.name}</div>
+           <div class="col-sm-6 offset-sm-3 text-center font-weight-bold" style="font-size: larger;">${dataKompetisi.competition.name}</div>
        </div>
        <div class="row">
            <div class="col-sm-6 text-center">${dataKompetisi.standings[0].stage}</div>
