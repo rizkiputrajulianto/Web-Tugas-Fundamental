@@ -18,15 +18,8 @@
         <div class="row">
             <div class="col-sm-4 offset-sm-4"><img src="https://wallpapercave.com/wp/wp8956027.jpg" class="img-fluid" alt="" srcset=""></div>
         </div>
-       <div class="row">
-           <div class="col-sm-6 offset-sm-3 text-center">Nama Liga</div>
-       </div>
-       <div class="row">
-           <div class="col-sm-6 offset-sm-3 text-center">Aktif/fisinised</div>
-       </div>
-       <div class="row">
-            <div class="col-sm-6 text-center">Start Date : 99-99-99</div>
-            <div class="col-sm-6 text-center">End Date : 99-99-99</div>
+        <div id="dataKompetisi">
+       
        </div>
        <table class="table table-light">
            <thead class="thead-dark">
@@ -69,9 +62,12 @@
         const getStanding = (stand) => {
             axios.get(API + "competitions/" + stand + "/standings", {headers:{'X-Auth-Token': `${apiKey}`}})
             .then(response => {
+                const dataKompetisi = response.data
                 const dataStanding = response.data.standings[0].table //data isi standingnya
                 console.log(dataStanding)
+                console.log(dataKompetisi)
                 let toHtml = ""
+                let toHtmlStanding = ""
                 dataStanding.forEach(tim => {
                     toHtml += `               <tr>
                    <td scope="row">${tim.position}</td>
@@ -83,9 +79,25 @@
                </tr>`
                 });
                 $("#listStanding").html(toHtml)
-            }).catch(err => console.log(err.message))
+                toHtmlStanding += `<div class="row">
+           <div class="col-sm-6 offset-sm-3 text-center">${dataKompetisi.competition.name}</div>
+       </div>
+       <div class="row">
+           <div class="col-sm-6 text-center">${dataKompetisi.standings[0].stage}</div>
+           <div class="col-sm-6 text-center" id="winner">Winner : ${dataKompetisi.season.winner}</div>
+       </div>
+       <div class="row">
+            <div class="col-sm-6 text-center">Start Date : ${dataKompetisi.season.startDate}</div>
+            <div class="col-sm-6 text-center">End Date : ${dataKompetisi.season.endDate}</div>
+       </div>`
+
+       $("#dataKompetisi").html(toHtmlStanding)
+            }).catch (err => console.log(err.message))
         }
         getStanding(2021)
+
+
+        
     </script>
 </body>
 </html>
