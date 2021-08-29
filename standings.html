@@ -58,6 +58,8 @@
     <script>
         const API = `https://api.football-data.org/v2/`
         const apiKey = "283dd1cf42b1410780fec6aa615a3e67"
+        const params = new URLSearchParams(window.location.search)
+        const paramsValue = params.get('team')
 
         const getStanding = (stand) => {
             // data Gambar
@@ -104,7 +106,7 @@
        $("#dataKompetisi").html(toHtmlStanding)
             }).catch (err => console.log(err.message))
         }
-        getStanding(2021)
+        getStanding(paramsValue)
 
 
         
