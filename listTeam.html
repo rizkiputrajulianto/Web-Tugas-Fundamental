@@ -10,6 +10,9 @@
     <!-- css bootstrap -->
 </head>
 <body>
+   <div id="listTeam" class="row">
+
+   </div>
 
     <!-- Jquery full -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -25,11 +28,29 @@
     <!-- sweetalert 2 -->
 
     <script>
-        const API = `https://api.football-data.org/v2/competitions/2001/teams`
+        const API = `https://api.football-data.org/v2/competitions/2021/teams`
         const apiKey = "283dd1cf42b1410780fec6aa615a3e67"
         axios.get(API, {headers: {
             'X-Auth-Token': `${apiKey}`
-        }}).then(response => console.log(response))
+        }}).then(response =>{
+            const listData = response.data.teams
+            console.log(listData)
+            let listTeamHTML = ""
+            listData.forEach(team => {
+                listTeamHTML+=` <div class="card mb-3 col-md-4" >
+                                    <div>
+                                        <div>
+                                            <div class="card-body">
+                                                <img src=${team.crestUrl} alt="..." style="max-height:50px;"> <a class="card-title">${team.name}</a>
+                                                <p class="card-text">${team.shortName}</p>
+                                                <p class="card-text"><small class="text-muted">${team.address}</small></p>
+                                             </div>
+                                        </div>
+                                    </div>
+                                </div>`
+            });
+            $("#listTeam").html(listTeamHTML)
+        })
         .catch(err => console.log(err))
     </script>
 </body>
