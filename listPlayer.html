@@ -10,7 +10,9 @@
     <!-- css bootstrap -->
 </head>
 <body>
-    
+    <div id="listPlayer" class="row">
+
+    </div>
     <!-- Jquery full -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Jquery full -->
@@ -30,8 +32,27 @@
         axios.get(APIplayer, {headers: {
             'X-Auth-Token': `${apiKeyy}`
         }}).then(response => {
-        const listData = response.data.data
-        console.log(listData)})
+            const listPlayer = response.data.squad
+            console.log(listPlayer)
+            let listPlayerHTML =""
+            listPlayer.forEach(player => {
+                listPlayerHTML+=`<div class="card mb-3 col-md-4">
+                                    <div>
+                                        <div >
+                                            <img src="..." alt="...">
+                                        </div>
+                                        <div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">${player.name}</h5>
+                                                <p class="card-text">${player.position}</p>
+                                                <p class="card-text"><small class="text-muted">${player.role}</small></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`
+            });
+            $("#listPlayer").html(listPlayerHTML)
+    })
         .catch(err => console.log(err))
 
     </script>
