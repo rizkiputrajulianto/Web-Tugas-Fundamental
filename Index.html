@@ -26,6 +26,13 @@
 
     <!-- isi konten -->
     <div class="container">
+        <div class="d-flex flex-column">
+            <div id="spinner" class="d-flex justify-content-center mt-3">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
         <div class="row" id="listKompetisi">
             
         </div>
@@ -96,6 +103,7 @@
             kolapId++
             });
             $("#listKompetisi").html(innerHtml)
+            $("#spinner").removeClass("d-flex").addClass("d-none")
         })
         .catch(err => console.log(err.message))
         // call API
