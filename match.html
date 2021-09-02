@@ -50,13 +50,40 @@
     <!-- sweetalert 2 -->
     <!-- script personal -->
     <script>
-      const APImatches = 'https://api.football-data.org/v2/competitions/2021/matches';
+      const APImatch = 'https://api.football-data.org/v2/competitions/2021/matches';
       const apiKey = "283dd1cf42b1410780fec6aa615a3e67";
-      axios
-        .get(APImatches, {headers: {
-            'X-Auth-Token': `${apiKey}`}})
-        .then((response) => console.log(response))
+      axios.get(APImatch, {headers: {
+            'X-Auth-Token': `${apiKey}`
+        }})
+        .then((response) => {
+          const dataKompetisi = response.data
+          const dataMatch = response.data.matches[0].table
+          console.log(dataMatch)
+          console.log(dataKompetisi)
+        
+        }
+
+        
+        
+        
+        
+        
+        
+        
+        )
+
+
+
+
+
+
+
+
+
+
+
         .catch((err) => console.log(err));
+
     </script>
   </body>
 </html>
