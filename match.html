@@ -14,13 +14,35 @@
     />
     <!-- css bootstrap -->
     <!-- css personal -->
-    <link rel="stylesheet" href="./script/css/style.css" />
+    <link rel="stylesheet" href="./script/css/styleMatch.css" />
     <!-- css personal -->
   </head>
   <body>
 
+        <table>
+      <tr>
+        <th>Date From</th>
+        <th>Date to</th>
+        <th>Stage</th>
+        <th>status</th>
+        <th>Match Day</th>
+        <th>Group</th>
+        <th>Season</th>
+      </tr>
+      
+      <div id="listmatch" class="row">
 
-
+      </div>
+      <!-- <tr>
+        <th>${DATE}</th>
+        <th>${DATE}</th>
+        <th>${STAGE}</th>
+        <th>${STATUS}</th>
+        <th>${MATCHDAY}</th>
+        <th>${GROUP}</th>
+        <th>${YEAR}</th>
+      </tr> -->
+    </table>
 
 
 
@@ -52,37 +74,27 @@
     <script>
       const APImatch = 'https://api.football-data.org/v2/competitions/2021/matches';
       const apiKey = "283dd1cf42b1410780fec6aa615a3e67";
-      axios.get(APImatch, {headers: {
+        axios.get(APImatch, {headers: {
             'X-Auth-Token': `${apiKey}`
-        }})
-        .then((response) => {
-          const dataKompetisi = response.data
-          const dataMatch = response.data.matches[0].table
-          console.log(dataMatch)
-          console.log(dataKompetisi)
-        
-        }
-
-        
-        
-        
-        
-        
-        
-        
-        )
-
-
-
-
-
-
-
-
-
-
-
-        .catch((err) => console.log(err));
+        }}).then(response => {
+            const listmatch = response.data.match
+            console.log(listmatch)
+            let listMatchHTML =""
+            listmatch.forEach(list => {
+                listMatchHTML+=` 
+      <tr>
+        <th> ${list.startDate} </th>
+        <th> ${list.endDate} </th>
+        <th>${list.stage}</th>
+        <th>${list.status}</th>
+        <th> ${list.matchday} </th>
+        <th> ${list.group} </th>
+        <th> ${list.season} </th>
+      </tr>`
+            });
+            $("#listmatch").html(listMatchHTML)
+    })
+        .catch(err => console.log(err))
 
     </script>
   </body>
