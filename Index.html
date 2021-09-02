@@ -57,6 +57,7 @@
     <script>
     const API = `https://api.football-data.org/v2/`
     const apiKey = "283dd1cf42b1410780fec6aa615a3e67"
+    const imagePlaceholder = `https://cdn.pixabay.com/photo/2013/07/13/10/51/football-157930_960_720.png`
         // call API
         axios.get(API + "competitions", {headers: {
             'X-Auth-Token': `${apiKey}`
@@ -66,13 +67,17 @@
             let innerHtml = ""
             let kolapId = "";
             dataList.forEach(list => {
+                let bendera = list.emblemUrl
+                if(bendera === null){
+                    bendera = imagePlaceholder;
+                }
                 if (list.plan === "TIER_FOUR" || list.plan === "TIER_THREE" || list.plan === "TIER_TWO") {
                     return true;
                 }
                 innerHtml += `<div class="col-sm-3">
                 <a class="kolaps" data-toggle="collapse" href="#exampleCollapse${kolapId}" role="button" aria-expanded="false" aria-controls="collapseExample">
                 <div class="card">
-                    <img src="${list.emblemUrl}" class="card-img-top img-fluid" alt="...">
+                    <img src="${bendera}" class="card-img-top img-fluid" style="max-height:150px;max-width:350px;" alt="...">
                     <div class="card-body">
                         <h6 class="card-title">${list.name}</h6>
                         <p class="text-center"><small>${list.area.name}</small></p>

@@ -81,14 +81,19 @@
         const apiKey = "283dd1cf42b1410780fec6aa615a3e67"
         const params = new URLSearchParams(window.location.search)
         const paramsValue = params.get('team')
+        const placeHolder = `https://cdn.pixabay.com/photo/2013/07/13/10/51/football-157930_960_720.png`
 
         const getStanding = (stand) => {
             // data Gambar
             axios.get(API + "competitions/" + stand + "/", {headers:{'X-Auth-Token': `${apiKey}`}})
             .then(response1 => {
                 const dataGambar = response1.data
+                let showGambar = dataGambar.emblemUrl
+                if (showGambar === null) {
+                    showGambar = placeHolder;
+                }
                 let toHtmlGambar = `        <div class="row">
-            <div class="col-sm-4 offset-sm-4"><img src="${dataGambar.emblemUrl}" class="img-fluid" alt="" srcset=""></div>
+            <div class="col-sm-4 offset-sm-4"><img src="${showGambar}" class="img-fluid" alt="" srcset=""></div>
         </div>`
             $("#gambarKompetisi").html(toHtmlGambar)
             }).catch(err => console.log(err.message))
@@ -128,7 +133,6 @@
             }).catch (err => console.log(err.message))
         }
         getStanding(paramsValue)
-
         
         
     </script>
