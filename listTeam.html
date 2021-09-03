@@ -9,11 +9,41 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <!-- css bootstrap -->
     <link rel="stylesheet" href="./script/css/style3.css">
+    <link rel="stylesheet" href="./script/css/style.css">
 </head>
 <body>
+        <!-- navbar -->
+        <div>
+            <nav>
+                <div class="container d-flex justify-content-sm-between align-items-sm-center">
+                    <a href="./Index.html">
+                        <h2>SOCCER INFO</h2>
+                    </a>
+                    <a href="./Index.html">Home</a>
+                </div>
+            </nav>
+        </div>
+        <!-- navbar -->
+        <div class="d-flex flex-column">
+            <div id="spinner" class="d-flex justify-content-center mt-3">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
    <div id="listTeam" class="row">
 
    </div>
+
+    <!-- footer -->
+    <div id="footer">
+        <footer>
+            <div class="container">
+                <p class="text-center text-lg">Soccer Info &copy2021 Indonesia</p>
+            </div>
+        </footer>
+    </div>
+    <!-- footer -->
 
     <!-- Jquery full -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -29,20 +59,29 @@
     <!-- sweetalert 2 -->
 
     <script>
-        const API = `https://api.football-data.org/v2/competitions/2021/teams`
+        const API = `https://api.football-data.org/v2/competitions/`
         const apiKey = "283dd1cf42b1410780fec6aa615a3e67"
-        axios.get(API, {headers: {
+        const param = new URLSearchParams(window.location.search)
+        const paramValue = param.get('listTeam')
+        const imagePlaceholder = `https://cdn.pixabay.com/photo/2013/07/13/10/51/football-157930_960_720.png`
+
+        const getTeamList = (teams) => {
+        axios.get(API + teams + "/teams/", {headers: {
             'X-Auth-Token': `${apiKey}`
         }}).then(response =>{
             const listData = response.data.teams
             console.log(listData)
             let listTeamHTML = ""
             listData.forEach(team => {
+                let gambarDefault = team.crestUrl
+                if (gambarDefault === null) {
+                    gambarDefault = imagePlaceholder
+                }
                 listTeamHTML+=` <div class="card mb-3 col-md-4" >
                                     <div>
                                         <div>
                                             <div class="card-body">
-                                                <img src=${team.crestUrl} alt="..." style="max-height:50px;"> <a class="card-title" href="listPlayer.html">${team.name}</a>
+                                                <img src="${gambarDefault}" alt="..." style="max-height:50px;"> <a class="card-title" href="listPlayer.html?listPlayer=${team.id}">${team.name}</a>
                                                 <p class="card-text">${team.shortName}</p>
                                                 <p class="card-text"><small class="text-muted">${team.address}</small></p>
                                              </div>
@@ -50,9 +89,12 @@
                                     </div>
                                 </div>`
             });
-            $("#listTeam").html(listTeamHTML) 
+            $("#listTeam").html(listTeamHTML)
+            $("#spinner").removeClass("d-flex").addClass("d-none")
         })
         .catch(err => console.log(err))
+    }
+    getTeamList(paramValue)
     </script>
 </body>
 </html>
