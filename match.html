@@ -1,68 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soccer Info</title>
     <!-- css bootstrap -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
-      crossorigin="anonymous"
-    />
-    <!-- css bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <!-- css bootstrap -->    
     <!-- css personal -->
-    <link rel="stylesheet" href="./script/css/styleMatch.css" />
+    <link rel="stylesheet" href="./script/css/style.css">
     <!-- css personal -->
-  </head>
-  <body>
+</head>
+<body>
+    
+    <div class="container">
+        <div id="gambarKompetisi">
 
-        <table>
-      <tr>
-        <th>Date From</th>
-        <th>Date to</th>
-        <th>Stage</th>
-        <th>status</th>
-        <th>Match Day</th>
-        <th>Group</th>
-        <th>Season</th>
-      </tr>
-      
-      <div id="listmatch" class="row">
+        </div>
+        <div id="dataKompetisi">
+       
+       </div>
+       <table class="table table-light">
+           <thead class="thead-dark">
+               <tr>
+                   <th scope="col-sm-1">Rank</th>
+                   <th scope="col-sm-3">Team</th>
+                   <th scope="col-sm-2">Wins</th>
+                   <th scope="col-sm-2">Draw</th>
+                   <th scope="col-sm-2">Lose</th>
+                   <th scope="col-sm-2">Points</th>
+               </tr>
+           </thead>
+           <tbody id="listStanding">
 
-      </div>
-      <!-- <tr>
-        <th>${DATE}</th>
-        <th>${DATE}</th>
-        <th>${STAGE}</th>
-        <th>${STATUS}</th>
-        <th>${MATCHDAY}</th>
-        <th>${GROUP}</th>
-        <th>${YEAR}</th>
-      </tr> -->
-    </table>
-
-
-
-
-
+           </tbody>
+       </table>
+    </div>
 
     <!-- Jquery full -->
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
-      integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Jquery full -->
     <!-- js bootstrap -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+        crossorigin="anonymous"></script>
     <!-- js bootstrap -->
     <!-- axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -72,30 +56,59 @@
     <!-- sweetalert 2 -->
     <!-- script personal -->
     <script>
-      const APImatch = 'https://api.football-data.org/v2/competitions/2021/matches';
-      const apiKey = "283dd1cf42b1410780fec6aa615a3e67";
-        axios.get(APImatch, {headers: {
-            'X-Auth-Token': `${apiKey}`
-        }}).then(response => {
-            const listmatch = response.data.match
-            console.log(listmatch)
-            let listMatchHTML =""
-            listmatch.forEach(list => {
-                listMatchHTML+=` 
-      <tr>
-        <th> ${list.startDate} </th>
-        <th> ${list.endDate} </th>
-        <th>${list.stage}</th>
-        <th>${list.status}</th>
-        <th> ${list.matchday} </th>
-        <th> ${list.group} </th>
-        <th> ${list.season} </th>
-      </tr>`
-            });
-            $("#listmatch").html(listMatchHTML)
-    })
-        .catch(err => console.log(err))
+        const API = `https://api.football-data.org/v2/competitions/2021/matches`
+        const apiKey = "283dd1cf42b1410780fec6aa615a3e67"
 
+        const getStanding = (stand) => {
+            // data Gambar
+            axios.get(API + "competitions/" + stand + "/", {headers:{'X-Auth-Token': `${apiKey}`}})
+            .then(response1 => {
+                const dataGambar = response1.data
+                let toHtmlGambar = `        <div class="row">
+            <div class="col-sm-4 offset-sm-4"><img src="${dataGambar.emblemUrl}" class="img-fluid" alt="" srcset=""></div>
+        </div>`
+            $("#gambarKompetisi").html(toHtmlGambar)
+            }).catch(err => console.log(err.message))
+            // data standing
+            axios.get(API + "competitions/" + stand + "/standings", {headers:{'X-Auth-Token': `${apiKey}`}})
+            .then(response => {
+                const dataKompetisi = response.data
+                const dataStanding = response.data.standings[0].table //data isi standingnya
+                console.log(dataStanding)
+                console.log(dataKompetisi)
+                let toHtml = ""
+                let toHtmlStanding = ""
+                dataStanding.forEach(tim => {
+                    toHtml += `               <tr>
+                   <td scope="row">${tim.startDate}</td>
+                   <td scope="row">${tim.endDate}</td>
+                   <td><img src="${tim.team.crestUrl}" class="img-fluid" style="max-height: 50px;" alt="bender">${tim.name}</td>
+                   <td>${tim.won}</td>
+                   <td>${tim.draw}</td>
+                   <td>${tim.lost}</td>
+                   <td>${tim.points}</td>
+               </tr>`
+                });
+                $("#listStanding").html(toHtml)
+                toHtmlStanding += `<div class="row">
+           <div class="col-sm-6 offset-sm-3 text-center font-weight-bold" style="font-size: larger;">${dataKompetisi.competition.name}</div>
+       </div>
+       <div class="row">
+           <div class="col-sm-6 text-center">${dataKompetisi.standings[0].stage}</div>
+           <div class="col-sm-6 text-center" id="winner">Winner : ${dataKompetisi.season.winner}</div>
+       </div>
+       <div class="row">
+            <div class="col-sm-6 text-center">Start Date : ${dataKompetisi.season.startDate}</div>
+            <div class="col-sm-6 text-center">End Date : ${dataKompetisi.season.endDate}</div>
+       </div>`
+
+       $("#dataKompetisi").html(toHtmlStanding)
+            }).catch (err => console.log(err.message))
+        }
+        getStanding(2021)
+
+
+        
     </script>
-  </body>
+</body>
 </html>
