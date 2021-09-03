@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soccer Info</title>
+    <!-- css bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <!-- css bootstrap -->    
+    <!-- css personal -->
+    <link rel="stylesheet" href="./script/css/style.css">
+    <!-- css personal -->
+</head>
+<body>
+        <!-- navbar -->
+        <div>
+            <nav>
+                <div class="container d-flex justify-content-sm-between align-items-sm-center">
+                    <a href="./Index.html">
+                        <h2>SOCCER INFO</h2>
+                    </a>
+                    <a href="./Index.html">Home</a>
+                </div>
+            </nav>
+        </div>
+        <!-- navbar -->
+    
+    <div class="container">
+        <div class="d-flex flex-column">
+            <div id="spinner-atas" class="d-flex justify-content-center mt-3">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+        <div id="gambarKompetisi">
+
+        </div>
+        <div id="dataKompetisi">
+       
+       </div>
+       <table class="table table-light">
+           <thead class="thead-dark">
+               <tr>
+                   <th scope="col-sm-1">Rank</th>
+                   <th scope="col-sm-3">Team</th>
+                   <th scope="col-sm-2">Wins</th>
+                   <th scope="col-sm-2">Draw</th>
+                   <th scope="col-sm-2">Lose</th>
+                   <th scope="col-sm-2">Points</th>
+               </tr>
+           </thead>
+           <tbody id="listStanding">
+
+           </tbody>
+       </table>
+                <div class="d-flex flex-column">
+                    <div id="spinner-bawah" class="d-flex justify-content-center mt-3">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+    </div>
+        <!-- footer -->
+        <div id="footer">
+            <footer>
+                <div class="container">
+                    <p class="text-center text-lg">Soccer Info &copy2021 Indonesia</p>
+                </div>
+            </footer>
+        </div>
+        <!-- footer -->
+
+    <!-- Jquery full -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Jquery full -->
+    <!-- js bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+        crossorigin="anonymous"></script>
+    <!-- js bootstrap -->
+    <!-- axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- axios -->
+    <!-- sweetalert 2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- sweetalert 2 -->
+    <!-- script personal -->
+    <script>
+        const API = `https://api.football-data.org/v2/`
+        const apiKey = "283dd1cf42b1410780fec6aa615a3e67"
+        const params = new URLSearchParams(window.location.search)
+        const paramsValue = params.get('team')
+        const placeHolder = `https://cdn.pixabay.com/photo/2013/07/13/10/51/football-157930_960_720.png`
+
+        const getStanding = (stand) => {
+            // data Gambar
+            axios.get(API + "competitions/" + stand + "/", {headers:{'X-Auth-Token': `${apiKey}`}})
+            .then(response1 => {
+                const dataGambar = response1.data
+                let showGambar = dataGambar.emblemUrl
+                if (showGambar === null) {
+                    showGambar = placeHolder;
+                }
+                let toHtmlGambar = `        <div class="row">
+            <div class="col-sm-4 offset-sm-4"><img src="${showGambar}" class="img-fluid" alt="" srcset=""></div>
+        </div>`
+            $("#gambarKompetisi").html(toHtmlGambar)
+            }).catch(err => console.log(err.message))
+            // data standing
+            axios.get(API + "competitions/" + stand + "/standings", {headers:{'X-Auth-Token': `${apiKey}`}})
+            .then(response => {
+                const dataKompetisi = response.data
+                const dataStanding = response.data.standings[0].table //data isi standingnya
+                console.log(dataStanding)
+                console.log(dataKompetisi)
+                let toHtml = ""
+                let toHtmlStanding = ""
+                dataStanding.forEach(tim => {
+                    toHtml += `               <tr>
+                   <td scope="row">${tim.position}</td>
+                   <td><img src="${tim.team.crestUrl}" class="img-fluid" style="max-height: 50px;" alt="bender">&nbsp;&nbsp;<a href="./team.html?team=${tim.team.id}">${tim.team.name}</a></td>
+                   <td>${tim.won}</td>
+                   <td>${tim.draw}</td>
+                   <td>${tim.lost}</td>
+                   <td>${tim.points}</td>
+               </tr>`
+                });
+                $("#listStanding").html(toHtml)
+                toHtmlStanding += `<div class="row">
+           <div class="col-sm-6 offset-sm-3 text-center font-weight-bold" style="font-size: larger;">${dataKompetisi.competition.name}</div>
+       </div>
+       <div class="row">
+           <div class="col-sm-6 text-center">${dataKompetisi.standings[0].stage}</div>
+           <div class="col-sm-6 text-center" id="winner">Winner : ${dataKompetisi.season.winner}</div>
+       </div>
+       <div class="row">
+            <div class="col-sm-6 text-center">Start Date : ${dataKompetisi.season.startDate}</div>
+            <div class="col-sm-6 text-center">End Date : ${dataKompetisi.season.endDate}</div>
+       </div>`
+
+       $("#dataKompetisi").html(toHtmlStanding)
+       $("#spinner-atas").removeClass("d-flex").addClass("d-none")
+       $("#spinner-bawah").removeClass("d-flex").addClass("d-none")
+            }).catch (err => console.log(err.message))
+        }
+        getStanding(paramsValue)
+        
+        
+    </script>
+</body>
+</html>
