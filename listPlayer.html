@@ -8,11 +8,42 @@
     <!-- css bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <!-- css bootstrap -->
+    <link rel="stylesheet" href="./script/css/style3.css">
 </head>
 <body>
+        <!-- navbar -->
+        <div>
+            <nav>
+                <div class="container d-flex justify-content-sm-between align-items-sm-center">
+                    <a href="./Index.html">
+                        <h2>SOCCER INFO</h2>
+                    </a>
+                    <a href="./Index.html">Home</a>
+                </div>
+            </nav>
+        </div>
+        <!-- navbar -->
+    <div class="container">
+        <div class="d-flex flex-column">
+            <div id="spinner" class="d-flex justify-content-center mt-3">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
     <div id="listPlayer" class="row">
 
     </div>
+    </div>
+        <!-- footer -->
+        <div id="footer">
+            <footer>
+                <div class="container">
+                    <p class="text-center text-lg">Soccer Info &copy2021 Indonesia</p>
+                </div>
+            </footer>
+        </div>
+        <!-- footer -->
     <!-- Jquery full -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Jquery full -->
@@ -27,9 +58,14 @@
     <!-- sweetalert 2 -->
 
     <script>
-        const APIplayer = 'https://api.football-data.org/v2/teams/58'
+        const APIplayer = 'https://api.football-data.org/v2/teams/'
         const apiKeyy = "283dd1cf42b1410780fec6aa615a3e67"
-        axios.get(APIplayer, {headers: {
+        const param = new URLSearchParams(window.location.search)
+        const paramValues = param.get('listPlayer')
+        const defaultFoto = `https://cdn.pixabay.com/photo/2014/04/03/10/53/football-311619_960_720.png`
+
+        const getListPlayer = (players) => {
+        axios.get(APIplayer + players + "/", {headers: {
             'X-Auth-Token': `${apiKeyy}`
         }}).then(response => {
             const listPlayer = response.data.squad
@@ -38,11 +74,11 @@
             listPlayer.forEach(player => {
                 listPlayerHTML+=`<div class="card mb-3 col-md-4">
                                     <div>
-                                        <div >
-                                            <img src="..." alt="...">
+                                        <div class="team">
+                                            <img src="${defaultFoto}" alt="..." class="img-fluid" id="player">
                                         </div>
                                         <div>
-                                            <div class="card-body">
+                                            <div class="card-body team">
                                                 <h5 class="card-title">${player.name}</h5>
                                                 <p class="card-text">${player.position}</p>
                                                 <p class="card-text"><small class="text-muted">${player.role}</small></p>
@@ -52,8 +88,11 @@
                                 </div>`
             });
             $("#listPlayer").html(listPlayerHTML)
+            $("#spinner").removeClass("d-flex").addClass("d-none")
     })
         .catch(err => console.log(err))
+}
+getListPlayer(paramValues)
 
     </script>
 </body>
