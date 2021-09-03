@@ -16,7 +16,7 @@
 <body>
     
     <div class="container">
-        <div class="row">
+        <div class="row" id="listMatch">
 
         </div>
     </div>
@@ -44,11 +44,7 @@
         const param = new URLSearchParams(window.location.search)
         const valueParam = param.get('match')
 
-        axios.get(API + "teams/57/", {
-                headers: {
-                    'X-Auth-Token': `${apiKey}`
-                }
-            }).then(response => console.log(response)).catch(err => console.log(err.message))
+
         axios.get(API + "competitions/2021/matches/", {
                 headers: {
                     'X-Auth-Token': `${apiKey}`
@@ -59,28 +55,26 @@
                 let tohtml = ""
                 data.forEach(match => {
                     tohtml += `            <div class="card col-sm-12">
-                <div class="flag">
-                <img class="img-fluid" src="" alt="" srcset="">
-                <p class="score">0</p>
-                <p class="score">0</p>
-                <img class="img-fluid" src="" alt="" srcset="">
+                <div class="flag mr-1">
+                <p class="score">${match.score.extraTime.homeTeam+match.score.fullTime.homeTeam+match.score.penalties.homeTeam}</p>
+                <p class="score">${match.score.extraTime.awayTeam + match.score.fullTime.awayTeam + match.score.penalties.awayTeam}</p>
                     </div>
                 <div class="card-body">
                     <div class="nama">
-                        <p>Home Team</p>
-                        <p>Away Team</p>
+                        <p>${match.homeTeam.name}</p>
+                        <p>${match.awayTeam.name}</p>
                     </div>
                     <div class="winner">
-                        <p>Status : Fi</p>
-                        <p>Winner : Home Team</p>
+                        <p>Status : ${match.status}</p>
+                        <p id="win">Winner : ${match.score.winner}</p>
                     </div>
                 </div>
             </div>`
                 });
+                $("#listMatch").html(tohtml)
             }).catch(err => console.log(err.message))
-        
+            
 
-        
     </script>
 </body>
 </html>
